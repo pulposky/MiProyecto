@@ -4,6 +4,7 @@
 import pygame
 from settings import *
 import random
+import os
 
 class Moneda(pygame.sprite.Sprite):
     
@@ -13,10 +14,18 @@ class Moneda(pygame.sprite.Sprite):
         self.image = pygame.Surface((30, 30), pygame.SRCALPHA)
         pygame.draw.circle(self.image, (255, 215, 0), (15, 15), 15)  # Dibuja un círculo amarillo
         self.rect = self.image.get_rect(center=(x, y))
+        
+        base = os.path.dirname(os.path.abspath(__file__))
+        ruta_sonido = os.path.join(base, "..", "assets", "sounds", "recogerMoneda.mp3")
+        self.sonido_moneda = pygame.mixer.Sound(ruta_sonido)
+        self.sonido_moneda.set_volume(0.3)  # Ajusta el volumen del sonido (0.0 a 1.0)
 
     def update(self, jugador):
         # Si el jugador colisiona con la moneda...
         if self.rect.colliderect(jugador.rect):
+            # Cargar el sonido
+            self.sonido_moneda.play()  # Reproducir el sonido de recoger la moneda
+
             print("¡Moneda recogida!")  # Imprime el puntaje actualizado en la consola
             
             # ...la moneda se mueve a otra posición aleatoria dentro de la ventana
